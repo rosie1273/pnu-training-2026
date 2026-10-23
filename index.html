@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 부산대학교 직무연수 포털</title>
+  <meta name="description" content="부산대학교 교직원을 위한 2026학년도 직무연수 통합 안내 및 신청 포털">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- PapaParse for robust CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-wrapper">
+        <img src="assets/pnu_logo.svg" alt="부산대학교 로고" class="brand-logo">
+        <div class="brand-titles">
+          <span class="brand-univ">Pusan National University</span>
+          <span class="brand-service">직무연수 포털</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="sync-status-badge">
+          <span class="sync-pulse-dot"></span>
+          <span>Google Sheets 실시간 연동 중</span>
+        </div>
+        <button class="btn-refresh" id="btnRefresh" title="구글 시트 데이터 즉시 새로고침">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          새로고침
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="hero-pill">
+        <span class="hero-pill-badge">2026 연수 계획</span>
+        <span>부산대학교 교직원 역량강화 직무연수</span>
+      </div>
+      <h1 class="hero-title">미래 교육을 선도하는 <br><span class="highlight">부산대학교 직무연수 카탈로그</span></h1>
+      <p class="hero-subtitle">
+        법정의무교육부터 최신 AI·데이터 실무, 대학행정 특화 과정까지 실무자의 성장을 지원하는 32개 맞춤형 연수 과정을 확인하세요.
+      </p>
+
+      <!-- Stat Counters -->
+      <div class="hero-metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">개설 과정</div>
+          <div class="metric-value"><span id="statTotal">32</span><span class="metric-unit">개</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">법정필수 교육</div>
+          <div class="metric-value"><span id="statMandatory">7</span><span class="metric-unit">개</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">온라인 상시</div>
+          <div class="metric-value"><span id="statOnline">8</span><span class="metric-unit">개</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">실무·전문 역량</div>
+          <div class="metric-value"><span id="statSpecialized">18</span><span class="metric-unit">개</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Filter & Search Console -->
+    <section class="filter-console">
+      <!-- Search Bar -->
+      <div class="search-row">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" id="searchInput" class="search-input" placeholder="연수 과정명, 담당부서, 키워드를 검색하세요 (예: AI, 보고서, 회계, 성희롱)">
+          <button type="button" id="searchClearBtn" class="search-clear-btn" aria-label="검색어 지우기">✕</button>
+        </div>
+        <button type="button" id="resetFiltersBtn" class="btn-reset-filters">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          필터 초기화
+        </button>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs-wrapper">
+        <div class="category-tabs" id="categoryTabs">
+          <button class="tab-btn active" data-category="all">전체보기</button>
+        </div>
+      </div>
+
+      <!-- Secondary Filters -->
+      <div class="secondary-filters-row">
+        <div class="filter-groups">
+          <!-- 이수구분 -->
+          <div class="select-control-wrapper">
+            <select id="filterRequirement" class="select-control">
+              <option value="all">이수구분: 전체</option>
+              <option value="필수">필수 (법정필수 포함)</option>
+              <option value="권장">권장</option>
+              <option value="선택">선택</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+
+          <!-- 교육방식 -->
+          <div class="select-control-wrapper">
+            <select id="filterMethod" class="select-control">
+              <option value="all">교육방식: 전체</option>
+              <option value="온라인">온라인</option>
+              <option value="집합">집합 (대면)</option>
+              <option value="혼합">혼합</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+
+          <!-- 대상 -->
+          <div class="select-control-wrapper">
+            <select id="filterTarget" class="select-control">
+              <option value="all">대상: 전체</option>
+              <option value="전 직원">전 직원</option>
+              <option value="실무자">실무자</option>
+              <option value="관리자">관리자</option>
+              <option value="신규자">신규자</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+
+          <!-- 담당부서 -->
+          <div class="select-control-wrapper">
+            <select id="filterDepartment" class="select-control">
+              <option value="all">담당부서: 전체</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+
+        <!-- 정렬 -->
+        <div class="select-control-wrapper">
+          <select id="sortSelect" class="select-control">
+            <option value="default">정렬: 기본 순서</option>
+            <option value="hours-desc">교육시간 많은 순</option>
+            <option value="hours-asc">교육시간 적은 순</option>
+            <option value="name">과정명 가나다순</option>
+            <option value="code">과정코드순</option>
+          </select>
+          <span class="select-arrow">▾</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Count Bar -->
+    <div class="results-header">
+      <div class="results-count" id="resultsCount">과정을 불러오는 중입니다...</div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" id="coursesContainer">
+      <!-- Skeleton will be rendered by JS -->
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h4>부산대학교 교직원 직무연수 포털</h4>
+          <p>46241 부산광역시 금정구 부산대학로63번길 2 (장전동) 부산대학교</p>
+        </div>
+        <div class="footer-contacts">
+          <div class="contact-item">
+            <span class="label">인재개발원 (연수 총괄)</span>
+            <span class="val">051-510-1231</span>
+          </div>
+          <div class="contact-item">
+            <span class="label">정보화본부 (AI·정보화)</span>
+            <span class="val">051-510-2001</span>
+          </div>
+          <div class="contact-item">
+            <span class="label">총무과 (인사·복무)</span>
+            <span class="val">051-510-1211</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Pusan National University. All rights reserved.</p>
+        <p>Google Sheets gviz API 실시간 동기화 지원</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

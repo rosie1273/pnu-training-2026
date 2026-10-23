@@ -1,0 +1,7 @@
+# Temporary data and scripts
+*.py
+*.json
+*.csv
+*.html
+!index.html
+!detail.html

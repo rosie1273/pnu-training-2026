@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>과정 상세 정보 | 2026 부산대학교 직무연수 포털</title>
+  <meta name="description" content="부산대학교 교직원 직무연수 세부 교육과정 안내 및 수강신청">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/detail.css">
+
+  <!-- PapaParse for robust CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-wrapper">
+        <img src="assets/pnu_logo.svg" alt="부산대학교 로고" class="brand-logo">
+        <div class="brand-titles">
+          <span class="brand-univ">Pusan National University</span>
+          <span class="brand-service">직무연수 포털</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="sync-status-badge">
+          <span class="sync-pulse-dot"></span>
+          <span>Google Sheets 실시간 연동 중</span>
+        </div>
+        <button class="btn-refresh" id="btnRefresh" title="구글 시트 데이터 즉시 새로고침">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          새로고침
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container" id="detailMainContainer">
+    <!-- Initial Skeleton Loader -->
+    <div style="padding: 40px 0;">
+      <div class="skeleton-shimmer" style="width: 240px; height: 24px; margin-bottom: 24px;"></div>
+      <div class="skeleton-shimmer" style="width: 100%; height: 160px; border-radius: 16px; margin-bottom: 24px;"></div>
+      <div class="skeleton-shimmer" style="width: 100%; height: 90px; border-radius: 12px; margin-bottom: 32px;"></div>
+      <div style="display: grid; grid-template-columns: 1fr 340px; gap: 32px;">
+        <div class="skeleton-shimmer" style="height: 380px; border-radius: 16px;"></div>
+        <div class="skeleton-shimmer" style="height: 260px; border-radius: 16px;"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h4>부산대학교 교직원 직무연수 포털</h4>
+          <p>46241 부산광역시 금정구 부산대학로63번길 2 (장전동) 부산대학교</p>
+        </div>
+        <div class="footer-contacts">
+          <div class="contact-item">
+            <span class="label">인재개발원 (연수 총괄)</span>
+            <span class="val">051-510-1231</span>
+          </div>
+          <div class="contact-item">
+            <span class="label">정보화본부 (AI·정보화)</span>
+            <span class="val">051-510-2001</span>
+          </div>
+          <div class="contact-item">
+            <span class="label">총무과 (인사·복무)</span>
+            <span class="val">051-510-1211</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Pusan National University. All rights reserved.</p>
+        <p>Google Sheets gviz API 실시간 동기화 지원</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/detail.js"></script>
+</body>
+</html>
